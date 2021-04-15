@@ -37,8 +37,11 @@ export class AuthService {
       console.log("coucou je suis là : execute post backend ------------------")
       return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
           this.dName = data;
+          this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
+          //console.log("-------AYA Add----------- :"+ data.JSON.stringify.value);
+
       });
-      console.log("Spring return :"+this.dName);
+
   }
 
 
