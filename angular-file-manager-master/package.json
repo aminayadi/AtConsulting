@@ -12,7 +12,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^11.2.13",
     "@angular/cdk": "^5.2.4",
     "@angular/common": "^11.2.13",
     "@angular/compiler": "^11.2.13",
@@ -24,6 +23,9 @@
     "@angular/platform-browser": "^11.2.13",
     "@angular/platform-browser-dynamic": "^11.2.13",
     "@angular/router": "^11.2.13",
+    "@azure/msal-angular": "*",
+    "@microsoft/microsoft-graph-client": "^2.2.1",
+    "@microsoft/microsoft-graph-types": "^1.36.0",
     "core-js": "^2.4.1",
     "rxjs": "^6.6.7",
     "uuid": "^3.2.1",
