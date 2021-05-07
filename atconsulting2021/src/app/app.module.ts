@@ -1,3 +1,5 @@
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FileService } from './service/file.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,9 +15,11 @@ import { FileExplorerModule } from './file-explorer/file-explorer.module';
   imports: [
     BrowserModule,
     MatCardModule,
-    FileExplorerModule
+    FileExplorerModule,
+    FlexLayoutModule
+
   ],
-  providers: [],
+  providers: [FileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

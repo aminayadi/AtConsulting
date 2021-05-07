@@ -1,6 +1,4 @@
-test message in component html
 <div style="padding: 100px; height: 100%; box-sizing: border-box;">
-  hello
   <mat-card style="height: 100%; box-sizing: border-box; padding:0">
     <file-explorer [fileElements]="fileElements | async" [path]="currentPath" [canNavigateUp]="canNavigateUp" (folderAdded)="addFolder($event)"
       (elementRemoved)="removeElement($event)" (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp()" (elementRenamed)="renameElement($event)"
@@ -8,4 +6,3 @@ test message in component html
     </file-explorer>
   </mat-card>
 </div>
-what happen !!!!!

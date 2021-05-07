@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 
 import { v4 } from 'uuid';
 import { FileElement } from '../file-explorer/model/file-element';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 
 export interface IFileService {
@@ -12,6 +13,7 @@ export interface IFileService {
   queryInFolder(folderId: string): Observable<FileElement[]>;
   get(id: string): FileElement;
 }
+
 
 @Injectable()
 export class FileService implements IFileService {
@@ -58,4 +60,10 @@ export class FileService implements IFileService {
   clone(element: FileElement) {
     return JSON.parse(JSON.stringify(element));
   }
+
+  ngOnInit() {
+    throw new Error('Function not implemented.');
+  }
 }
+
+
