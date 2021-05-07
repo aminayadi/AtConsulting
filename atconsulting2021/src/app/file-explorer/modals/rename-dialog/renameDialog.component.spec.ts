@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RenameDialogComponent } from './rename-dialog.component';
+import { RenameDialogComponent } from './renameDialog.component';
 
 describe('RenameDialogComponent', () => {
   let component: RenameDialogComponent;
