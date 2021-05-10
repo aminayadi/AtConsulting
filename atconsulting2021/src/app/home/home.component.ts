@@ -1,9 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from '../auth.service';
+import { Component, OnInit } from '@angular/core';
+import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
+import { AuthenticationResult, EventMessage, EventType, InteractionStatus } from '@azure/msal-browser';
+import { filter } from 'rxjs/operators';
+
 import { User } from '../user';
 
 @Component({
@@ -12,22 +15,34 @@ import { User } from '../user';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  // Is a user logged in?
-  get authenticated(): boolean {
-    return this.authService.authenticated;
+
+  loginDisplay = false;
+
+  constructor(private authService: MsalService, private msalBroadcastService: MsalBroadcastService) { }
+
+  ngOnInit(): void {
+    this.msalBroadcastService.msalSubject$
+      .pipe(
+        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
+      )
+      .subscribe((result: EventMessage) => {
+        console.log(result);
+        const payload = result.payload as AuthenticationResult;
+        this.authService.instance.setActiveAccount(payload.account);
+      });
+    
+    this.msalBroadcastService.inProgress$
+      .pipe(
+        filter((status: InteractionStatus) => status === InteractionStatus.None)
+      )
+      .subscribe(() => {
+        this.setLoginDisplay();
+      })
+    
   }
-  // The user
-  get user(): User {
-    return this.authService.user;
-  }
-
-  constructor(private authService: AuthService) { }
-
-  ngOnInit() {}
-
-  // <signInSnippet>
-  async signIn(): Promise<void> {
-    await this.authService.signIn();
+  
+  setLoginDisplay() {
+    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
   // </signInSnippet>
 }
