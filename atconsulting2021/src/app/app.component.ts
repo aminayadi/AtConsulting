@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
         this.setLoginDisplay();
         this.checkAndSetActiveAccount();
       })
-      console.log("Token : ...." + this.getAccessToken());
+     
   
 
     const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
@@ -165,6 +165,11 @@ export class AppComponent implements OnInit {
     const result = await this.msalService.acquireTokenSilent(OAuthSettings);
     if (result) {
       //return result.forEach   .accessToken;
+       result.subscribe(res => {
+         console.log("TOKKKKKKEN : " + res.accessToken);
+          return res.accessToken ;
+      }
+        );
     }}
     catch(reason) {
         this.alertsService.addError('Get token failed', JSON.stringify(reason, null, 2));
@@ -220,11 +225,13 @@ export class AppComponent implements OnInit {
       this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
         .subscribe((response: AuthenticationResult) => {
           this.authService.instance.setActiveAccount(response.account);
+          console.log("Token : ...." + this.getAccessToken());
         });
       } else {
         this.authService.loginPopup()
           .subscribe((response: AuthenticationResult) => {
             this.authService.instance.setActiveAccount(response.account);
+            console.log("Token : ...." + this.getAccessToken());
       });
     }
   }
