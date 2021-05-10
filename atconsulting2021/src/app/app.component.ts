@@ -51,9 +51,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+    //this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+    console.log("before set login display ");
     this.setLoginDisplay();
-    
+    console.log("after set login display ");
     this.msalBroadcastService.inProgress$
       .pipe(
         filter((status: InteractionStatus) => status === InteractionStatus.None),
@@ -63,6 +64,7 @@ export class AppComponent implements OnInit {
         this.setLoginDisplay();
         this.checkAndSetActiveAccount();
       })
+      console.log("destroying ....");
   
 
     const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
