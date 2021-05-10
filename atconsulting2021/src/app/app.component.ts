@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
         this.setLoginDisplay();
         this.checkAndSetActiveAccount();
       })
-      console.log("destroying ....");
+      console.log("Token : ...." + this.getAccessToken());
   
 
     const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
@@ -160,6 +160,8 @@ export class AppComponent implements OnInit {
   async getAccessToken(): Promise<string> {
     try
     {
+      console.log("get access token ");
+      
     const result = await this.msalService.acquireTokenSilent(OAuthSettings);
     if (result) {
       //return result.forEach   .accessToken;
