@@ -2,23 +2,68 @@ import { Component } from '@angular/core';
 import { FileElement } from './file-explorer/model/file-element';
 import { Observable } from 'rxjs';
 import { FileService } from './service/file.service';
+import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
+import { AlertsService } from './alerts.service';
+import { HttpClient } from '@angular/common/http';
+import { OAuthSettings } from './oauth';
+import { User } from './user';
+import { Client } from '@microsoft/microsoft-graph-client';
+import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
+import { Subject } from 'rxjs';
+import { AuthenticationResult, InteractionStatus, PopupRequest, RedirectRequest } from '@azure/msal-browser';
+import {  MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 
+
+import { OnInit } from '@angular/core';
+import { filter, takeUntil } from 'rxjs/operators';
+
+import { EventMessage, EventType } from '@azure/msal-browser';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public fileElements: Observable<FileElement[]>;
 
-  constructor(public fileService: FileService) {}
+  private readonly _destroying$ = new Subject<void>();
+
+  constructor(public fileService: FileService,
+    private msalService: MsalService,
+    private alertsService: AlertsService,
+    private broadcastService: MsalBroadcastService,
+    private http: HttpClient) {}
+    private authService: MsalService
 
   currentRoot: FileElement;
   currentPath: string;
   canNavigateUp = false;
+  isIframe = false;
+  public authenticated: boolean;
+  public user: User;
+  public token: string;
+  loginDisplay = false;
+
+  setLoginDisplay() {
+    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+  }
 
   ngOnInit() {
+    this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+    this.setLoginDisplay();
+    
+    this.msalBroadcastService.inProgress$
+      .pipe(
+        filter((status: InteractionStatus) => status === InteractionStatus.None),
+        takeUntil(this._destroying$)
+      )
+      .subscribe(() => {
+        this.setLoginDisplay();
+        this.checkAndSetActiveAccount();
+      })
+  
+
     const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
     this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
     this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
@@ -93,4 +138,56 @@ export class AppComponent {
     p = split.join('/');
     return p;
   }
+
+  // Silently request an access token
+  async getAccessToken(): Promise<string> {
+    try
+    {
+    const result = await this.msalService.acquireTokenSilent(OAuthSettings);
+    if (result) {
+      //return result.forEach   .accessToken;
+    }}
+    catch(reason) {
+        this.alertsService.addError('Get token failed', JSON.stringify(reason, null, 2));
+      }
+
+
+
+
+    // Couldn't get a token
+    this.authenticated = false;
+    return null;
+  }
+
+
+  private async getUser(): Promise<User> {
+    if (!this.authenticated) return null;
+
+    const graphClient = Client.init({
+      // Initialize the Graph client with an auth
+      // provider that requests the token from the
+      // auth service
+      authProvider: async(done) => {
+        let token = await this.getAccessToken()
+          .catch((reason) => {
+            done(reason, null);
+          });
+
+        if (token)
+        {
+          console.log("TOKEN = " + token);
+          this.token = token ;
+          let results = this.ngOnInit();
+
+
+
+          done(null, token);
+        } else {
+          done("Could not get an access token", null);
+        }
+      }
+    });
+  }
+
+
 }
