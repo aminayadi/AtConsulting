@@ -32,9 +32,10 @@ export class AppComponent implements OnInit {
   constructor(public fileService: FileService,
     private msalService: MsalService,
     private alertsService: AlertsService,
-    private broadcastService: MsalBroadcastService,
+    private authService: MsalService,
+    private msalBroadcastService: MsalBroadcastService,
     private http: HttpClient) {}
-    private authService: MsalService
+   
 
   currentRoot: FileElement;
   currentPath: string;
@@ -72,7 +73,19 @@ export class AppComponent implements OnInit {
 
     this.updateFileElementQuery();
   }
+  checkAndSetActiveAccount(){
+    /**
+     * If no active account set but there are accounts signed in, sets first account to active account
+     * To use active account set here, subscribe to inProgress$ first in your component
+     * Note: Basic usage demonstrated. Your app may require more complicated account selection logic
+     */
+    let activeAccount = this.authService.instance.getActiveAccount();
 
+    if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
+      let accounts = this.authService.instance.getAllAccounts();
+      this.authService.instance.setActiveAccount(accounts[0]);
+    }
+  }
   // tslint:disable-next-line:typedef
   addFolder(folder: { name: string }) {
     this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id : 'root' });
