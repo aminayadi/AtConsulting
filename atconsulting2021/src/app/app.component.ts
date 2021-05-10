@@ -18,6 +18,7 @@ import { OnInit } from '@angular/core';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { EventMessage, EventType } from '@azure/msal-browser';
+import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit {
   private readonly _destroying$ = new Subject<void>();
 
   constructor(public fileService: FileService,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private msalService: MsalService,
     private alertsService: AlertsService,
     private authService: MsalService,
@@ -203,6 +205,36 @@ export class AppComponent implements OnInit {
       }
     });
   }
+  loginRedirect() {
+    if (this.msalGuardConfig.authRequest){
+      this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
+    } else {
+      this.authService.loginRedirect();
+    }
+  }
 
+  loginPopup() {
+    if (this.msalGuardConfig.authRequest){
+      this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
+        .subscribe((response: AuthenticationResult) => {
+          this.authService.instance.setActiveAccount(response.account);
+        });
+      } else {
+        this.authService.loginPopup()
+          .subscribe((response: AuthenticationResult) => {
+            this.authService.instance.setActiveAccount(response.account);
+      });
+    }
+  }
+
+  logout(popup?: boolean) {
+    if (popup) {
+      this.authService.logoutPopup({
+        mainWindowRedirectUri: "/"
+      });
+    } else {
+      this.authService.logoutRedirect();
+    }
+  }
 
 }

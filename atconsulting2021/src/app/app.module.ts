@@ -14,7 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { IPublicClientApplication} from '@azure/msal-browser';
 import { MsalGuard, MsalBroadcastService,  MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalRedirectComponent } from '@azure/msal-angular';
-
+import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { MatCardModule } from '@angular/material/card';
@@ -93,7 +93,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     FileExplorerModule,
     FlexLayoutModule,
     MsalModule,
-    MatCardModule
+    MatCardModule,
+    AppRoutingModule
   ],
   providers: [FileService,
     {
