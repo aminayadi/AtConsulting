@@ -37,8 +37,8 @@ export class AppComponent implements OnInit {
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
     private http: HttpClient) {}
-   
 
+    private readonly  URL = 'http://localhost:8082/api/atconsulting/service';
   currentRoot: FileElement;
   currentPath: string;
   canNavigateUp = false;
@@ -66,8 +66,8 @@ export class AppComponent implements OnInit {
         this.setLoginDisplay();
         this.checkAndSetActiveAccount();
       })
-     
-  
+
+
 
     const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
     this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
@@ -161,12 +161,29 @@ export class AppComponent implements OnInit {
     try
     {
       console.log("get access token ");
-      
+
     const result = await this.msalService.acquireTokenSilent(OAuthSettings);
     if (result) {
       //return result.forEach   .accessToken;
        result.subscribe(res => {
          console.log("TOKKKKKKEN : " + res.accessToken);
+
+
+         const headers = { 'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMDc3NjU3M30.fh7LSWiFXlRQGRYW3IZkf6vspM2kX5xyomAdynTslakKnSGE62kSoBlJJyW5MRZvvDDX8r48Z-5Dfi0UsmsVuw',
+         'Content-Type': 'application/json' };
+const body = { bearer_token: this.token };
+console.log("coucou je suis là : execute post backend ------------------")
+return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
+//this.dName = data;
+this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
+//console.log("-------AYA Add----------- :"+ data.JSON.stringify.value);
+
+});
+
+
+
+
+
           return res.accessToken ;
       }
         );
