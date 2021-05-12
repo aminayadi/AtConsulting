@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
   public user: User;
   public token: string;
   loginDisplay = false;
-  artists: any[] = [];
+  documents: any[] = [];
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
@@ -70,14 +70,6 @@ export class AppComponent implements OnInit {
       })
 
 
-
-    const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
-    this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
-    this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
-
-    this.updateFileElementQuery();
   }
   checkAndSetActiveAccount(){
     /**
@@ -180,11 +172,38 @@ export class AppComponent implements OnInit {
           console.log("coucou je suis là : execute post backend ------------------")
           return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
          // this.dName = data;
-         this.artists = data ;
+         this.documents = data['value'] ;
          // this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
-          console.log("-------AYA Add---taw taw-------- :"+ this.artists['value'][0].name);
+         // console.log("-------AYA Add---taw taw-------- :"+ this.documents['value'][0].name);
+         console.log("-------AYA Add---taw taw-------- :"+ this.documents[0].name);
+
+         this.documents.forEach(element => {
+
+           if (element.folder != null)
+            this.fileService.add({ name: element.name, isFolder: true, parent: 'root' });
+          else
+            this.fileService.add({ name: element.name, isFolder: false, parent: 'root' });
+
+        });
+
+
+        /*
+            const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
+            this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
+            this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
+            this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
+            this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
+        */
+            this.updateFileElementQuery();
+
+
+
+
+
 
           });
+
+
 
 
 
@@ -197,10 +216,6 @@ export class AppComponent implements OnInit {
     catch(reason) {
         this.alertsService.addError('Get token failed', JSON.stringify(reason, null, 2));
       }
-
-
-
-
     // Couldn't get a token
     this.authenticated = false;
     return null;
