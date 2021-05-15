@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     private msalBroadcastService: MsalBroadcastService,
     private http: HttpClient) {}
 
-    private readonly  URL = 'http://localhost:8082/api/atconsulting/service';
+    private   URL: string;
   currentRoot: FileElement;
   currentPath: string;
   canNavigateUp = false;
@@ -166,42 +166,7 @@ export class AppComponent implements OnInit {
          console.log("TOKKKKKKEN : " + res.accessToken);
         this.token = res.accessToken ;
 
-         const headers = { 'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMDc3NjU3M30.fh7LSWiFXlRQGRYW3IZkf6vspM2kX5xyomAdynTslakKnSGE62kSoBlJJyW5MRZvvDDX8r48Z-5Dfi0UsmsVuw',
-         'Content-Type': 'application/json' };
-          const body = { bearer_token: this.token };
-          console.log("coucou je suis là : execute post backend ------------------")
-          return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
-         // this.dName = data;
-         this.documents = data['value'] ;
-         // this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
-         // console.log("-------AYA Add---taw taw-------- :"+ this.documents['value'][0].name);
-         console.log("-------AYA Add---taw taw-------- :"+ this.documents[0].name);
-
-         this.documents.forEach(element => {
-
-           if (element.folder != null)
-            this.fileService.add({ name: element.name, isFolder: true, parent: 'root' });
-          else
-            this.fileService.add({ name: element.name, isFolder: false, parent: 'root' });
-
-        });
-
-
-        /*
-            const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
-            this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
-            this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
-            this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
-            this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
-        */
-            this.updateFileElementQuery();
-
-
-
-
-
-
-          });
+        this. FillFolder('root','root',null);
 
 
 
@@ -219,6 +184,92 @@ export class AppComponent implements OnInit {
     // Couldn't get a token
     this.authenticated = false;
     return null;
+  }
+
+
+  private async FillFolder(folderName : string, folderId : string, createdID: string){
+
+    const headers = { 'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMDc3NjU3M30.fh7LSWiFXlRQGRYW3IZkf6vspM2kX5xyomAdynTslakKnSGE62kSoBlJJyW5MRZvvDDX8r48Z-5Dfi0UsmsVuw',
+    'Content-Type': 'application/json' };
+
+     console.log("coucou je suis là : execute post backend ------------------")
+
+if (folderId == 'root')
+{
+  const body = { bearer_token: this.token };
+  this.URL = 'http://localhost:8082/api/atconsulting/service';
+
+     return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
+    // this.dName = data;
+    this.documents = data['value'] ;
+    // this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
+    // console.log("-------AYA Add---taw taw-------- :"+ this.documents['value'][0].name);
+    console.log("-------AYA Add---taw taw-------- :"+ this.documents[0].name);
+
+    this.documents.forEach(element => {
+
+      if (element.folder != null)
+      {
+        console.log("Root : Adding folder :"+ element.name);
+       const folder  = this.fileService.add({ name: element.name, isFolder: true, parent:"root", id: element.id });
+       this.FillFolder(this.token, element.id, folder.id);
+       this.updateFileElementQuery();
+      }
+     else
+     {
+      console.log("Root : Adding file :"+ element.name);
+       this.fileService.add({ name: element.name, isFolder: false, parent:"root", id: element.id});
+       this.updateFileElementQuery();
+     }
+
+   });
+   /*
+       const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
+       this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
+       this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
+       this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
+       this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
+   */
+
+
+     });
+
+}
+else{
+
+  const body = {
+    bearer_token: this.token,
+    idFolder: folderId
+  };
+  this.URL = 'http://localhost:8082/api/atconsulting/subfolder';
+
+  return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
+    this.documents = data['value'] ;
+    this.documents.forEach(element => {
+
+      if (element.folder != null)
+      {
+        console.log("Adding folder :"+ element.name + " in element : " + element.id );
+       const folder = this.fileService.add({ name: element.name, isFolder: true, parent:createdID, id: element.id });
+       this.FillFolder(this.token, element.id, folder.id);
+       this.updateFileElementQuery();
+
+      }
+     else
+     {
+      console.log("Adding file :"+ element.name  + " in element : " + element.id);
+       this.fileService.add({ name: element.name, isFolder: false, parent:createdID, id: element.id});
+       this.updateFileElementQuery();
+
+     }
+   });
+     });
+
+
+}
+
+
+
   }
 
 
