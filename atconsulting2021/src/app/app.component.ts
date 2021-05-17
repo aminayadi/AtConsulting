@@ -12,13 +12,13 @@ import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { Subject } from 'rxjs';
 import { AuthenticationResult, InteractionStatus, PopupRequest, RedirectRequest } from '@azure/msal-browser';
 import {  MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
-
-
 import { OnInit } from '@angular/core';
 import { filter, takeUntil } from 'rxjs/operators';
-
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { Inject } from '@angular/core';
+
+
+
 
 @Component({
   selector: 'app-root',
@@ -39,7 +39,6 @@ export class AppComponent implements OnInit {
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
     private http: HttpClient) {}
-
     private   URL: string;
   currentRoot: FileElement;
   currentPath: string;
@@ -185,15 +184,11 @@ export class AppComponent implements OnInit {
     this.authenticated = false;
     return null;
   }
-
-
   private async FillFolder(folderName : string, folderId : string, createdID: string){
 
     const headers = { 'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMDc3NjU3M30.fh7LSWiFXlRQGRYW3IZkf6vspM2kX5xyomAdynTslakKnSGE62kSoBlJJyW5MRZvvDDX8r48Z-5Dfi0UsmsVuw',
     'Content-Type': 'application/json' };
-
      console.log("coucou je suis là : execute post backend ------------------")
-
 if (folderId == 'root')
 {
   const body = { bearer_token: this.token };
@@ -205,9 +200,7 @@ if (folderId == 'root')
     // this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
     // console.log("-------AYA Add---taw taw-------- :"+ this.documents['value'][0].name);
     console.log("-------AYA Add---taw taw-------- :"+ this.documents[0].name);
-
     this.documents.forEach(element => {
-
       if (element.folder != null)
       {
         console.log("Root : Adding folder :"+ element.name);
@@ -236,31 +229,26 @@ if (folderId == 'root')
 
 }
 else{
-
   const body = {
     bearer_token: this.token,
     idFolder: folderId
   };
   this.URL = 'http://localhost:8082/api/atconsulting/subfolder';
-
   return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
     this.documents = data['value'] ;
     this.documents.forEach(element => {
-
       if (element.folder != null)
       {
         console.log("Adding folder :"+ element.name + " in element : " + element.id );
        const folder = this.fileService.add({ name: element.name, isFolder: true, parent:createdID, id: element.id });
        this.FillFolder(this.token, element.id, folder.id);
        this.updateFileElementQuery();
-
       }
      else
      {
       console.log("Adding file :"+ element.name  + " in element : " + element.id);
        this.fileService.add({ name: element.name, isFolder: false, parent:createdID, id: element.id});
        this.updateFileElementQuery();
-
      }
    });
      });
@@ -275,7 +263,6 @@ else{
 
   private async getUser(): Promise<User> {
     if (!this.authenticated) return null;
-
     const graphClient = Client.init({
       // Initialize the Graph client with an auth
       // provider that requests the token from the
@@ -285,15 +272,11 @@ else{
           .catch((reason) => {
             done(reason, null);
           });
-
         if (token)
         {
           console.log("TOKEN = " + token);
           this.token = token ;
           let results = this.ngOnInit();
-
-
-
           done(null, token);
         } else {
           done("Could not get an access token", null);

@@ -15,7 +15,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { IPublicClientApplication} from '@azure/msal-browser';
 import { MsalGuard, MsalBroadcastService,  MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalRedirectComponent } from '@azure/msal-angular';
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app.component';
 import { MatCardModule } from '@angular/material/card';
 import { FileExplorerModule } from './file-explorer/file-explorer.module';
@@ -25,11 +24,9 @@ import { DetailComponent } from './detail/detail.component';
 import { ProfileComponent } from './profile/profile.component';
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
-
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
 }
-
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -54,12 +51,10 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     }
   });
 }
-
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
   // protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']); // Prod environment. Uncomment to use.
   protectedResourceMap.set('https://graph.microsoft-ppe.com/v1.0/me', ['user.read']);
-
   return {
     interactionType: InteractionType.Redirect,
     protectedResourceMap
