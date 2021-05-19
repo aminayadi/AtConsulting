@@ -1,0 +1,34 @@
+<section class="signup-form">
+    <form fxLayout="column" fxLayoutAlign="center center" #f="ngForm" >
+    <mat-form-field>
+      <input
+        type="number"
+        matInput
+        placeholder="Your code user"
+        ngModel
+        name="Code_user"
+        required
+        [(ngModel)]="data.Code_user"
+        #codeHInput="ngModel">
+      <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
+    </mat-form-field>
+    <mat-form-field >
+      <input
+        type="text"
+        matInput
+        placeholder="Your nom user"
+        ngModel
+        name="Nom_User"
+        required
+        [(ngModel)]="data.Nom_user"
+        #nomHInput="ngModel">
+        <mat-error *ngIf="nomHInput.hasError('required')">nom must not be empty.</mat-error>
+    </mat-form-field>
+    <div class="button-row">
+      <button  mat-raised-button color="primary" [disabled]="f.invalid" [mat-dialog-close]="data">Submit</button>
+      <button  mat-raised-button color="warn" (click)="onNoClick()" >Cancel</button>
+
+    </div>
+
+  </form>
+</section>

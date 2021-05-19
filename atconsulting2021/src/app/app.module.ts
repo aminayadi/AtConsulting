@@ -22,6 +22,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './detail/detail.component';
 import { ProfileComponent } from './profile/profile.component';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MaterialModule } from './material/material.module';
+
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
 export function loggerCallback(logLevel: LogLevel, message: string) {
@@ -90,7 +93,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     FlexLayoutModule,
     MsalModule,
     MatCardModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule
   ],
   providers: [FileService,
     {
@@ -110,6 +114,12 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
       provide: MSAL_INTERCEPTOR_CONFIG,
       useFactory: MSALInterceptorConfigFactory
     },
+
+
+      {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}},
+
+
+
     MsalService,
     MsalGuard,
     MsalBroadcastService

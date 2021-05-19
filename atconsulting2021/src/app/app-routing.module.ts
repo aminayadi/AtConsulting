@@ -5,6 +5,8 @@ import { HomeComponent } from './home/home.component';
 import { MsalGuard } from '@azure/msal-angular';
 import { DetailComponent } from './detail/detail.component';
 import { FailedComponent } from './failed/failed.component';
+import { UserComponent } from './user/user.component';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 const routes: Routes = [
   {
@@ -12,6 +14,7 @@ const routes: Routes = [
     component: ProfileComponent,
     canActivate: [MsalGuard]
   },
+  {path: 'user', component: UserComponent },
   {
     path: 'profile',
     canActivateChild: [MsalGuard],
@@ -22,8 +25,8 @@ const routes: Routes = [
       }
     ]
   },
-  { 
-    path: 'lazyLoad', 
+  {
+    path: 'lazyLoad',
     loadChildren: () => import('./lazy/lazy.module').then(m => m.LazyModule),
     canLoad: [MsalGuard]
   },
@@ -50,6 +53,9 @@ const isIframe = window !== window.parent && !window.opener; // Remove this line
     // Don't perform initial navigation in iframes
     initialNavigation: !isIframe ? 'enabled' : 'disabled' // Remove this line to use Angular Universal
   })],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}}
+  ]
 })
 export class AppRoutingModule { }
