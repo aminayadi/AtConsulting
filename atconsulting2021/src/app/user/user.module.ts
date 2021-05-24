@@ -6,8 +6,9 @@ import { UserDtDialogComponent } from './userDtDialog/user-dt-dialog.component';
 import { UserDialogComponent } from './userDialog/user-dialog.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from 'src/app/material/material.module';
+
 import { UserComponent } from './user.component';
+import { MaterialModule } from '../material/material.module';
 
 
 
@@ -25,6 +26,7 @@ import { UserComponent } from './user.component';
     FlexLayoutModule,
     FormsModule,
     MaterialModule
+
   ]
 })
 export class UserModule { }

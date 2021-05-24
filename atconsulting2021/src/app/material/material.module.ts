@@ -14,15 +14,16 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatDialogModule} from '@angular/material/dialog';
+import { AppComponent } from '../app.component';
 
 
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [AppComponent],
   imports: [
-    CommonModule,
+
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -54,4 +55,4 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatDialogModule
   ]
 })
-export class MaterialModule { }
+export class MaterialModule {}
