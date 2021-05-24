@@ -14,14 +14,14 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatDialogModule} from '@angular/material/dialog';
-import { AppComponent } from '../app.component';
+
 
 
 
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [],
   imports: [
 
     MatToolbarModule,
