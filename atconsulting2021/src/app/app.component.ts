@@ -16,6 +16,7 @@ import { OnInit } from '@angular/core';
 import { filter, takeUntil } from 'rxjs/operators';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { Inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 
@@ -32,7 +33,8 @@ export class AppComponent implements OnInit {
   private readonly _destroying$ = new Subject<void>();
   dName: any;
 
-  constructor(public fileService: FileService,
+  constructor(private router: Router,
+    public fileService: FileService,
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private msalService: MsalService,
     private alertsService: AlertsService,
@@ -316,6 +318,15 @@ else{
     } else {
       this.authService.logoutRedirect();
     }
+  }
+
+  goToUserComponent()
+  {
+    const navigationDetails: string[] = ['/user'];
+
+    this.router.navigate(navigationDetails);
+
+
   }
 
 }

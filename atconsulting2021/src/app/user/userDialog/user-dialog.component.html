@@ -6,9 +6,9 @@
         matInput
         placeholder="Your code user"
         ngModel
-        name="Code_user"
+        name="id"
         required
-        [(ngModel)]="data.Code_user"
+        [(ngModel)]="data.id"
         #codeHInput="ngModel">
       <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
     </mat-form-field>
@@ -18,9 +18,9 @@
         matInput
         placeholder="Your nom user"
         ngModel
-        name="Nom_User"
+        name="adress"
         required
-        [(ngModel)]="data.Nom_user"
+        [(ngModel)]="data.adress"
         #nomHInput="ngModel">
         <mat-error *ngIf="nomHInput.hasError('required')">nom must not be empty.</mat-error>
     </mat-form-field>

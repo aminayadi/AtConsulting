@@ -17,8 +17,7 @@ import { MaterialModule } from '../material/material.module';
 @NgModule({
   declarations: [
     UserDtDialogComponent,
-    UserDialogComponent,
-    UserComponent
+    UserDialogComponent
   ],
   imports: [
     CommonModule,

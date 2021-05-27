@@ -1,3 +1,4 @@
+import { UserComponent } from './user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileService } from './service/file.service';
 import { NgModule } from '@angular/core';
@@ -78,7 +79,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     AppComponent,
     HomeComponent,
     ProfileComponent,
-    DetailComponent
+    DetailComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

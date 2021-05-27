@@ -22,13 +22,13 @@ export class UserComponent implements OnInit,AfterViewInit  {
   dataSource!: MatTableDataSource<User> ;
   userList!:User[];
 
-  displayedColumns: string[] = ['Code_user', 'Nom_user','detail','update','delete'];
+  displayedColumns: string[] = ['id', 'adress'];
 
   searchKey!: string;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!:MatPaginator;
-  Code_user!:number;
-  Nom_user!:string;
+  id!:number;
+  adress!:string;
   vvv:any;
 
   constructor(private dialog:MatDialog,private userService :UserService ) { }
@@ -70,7 +70,7 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "60%";
-    dialogConfig.data = {Code_User: this.Code_user, Nom_User: this.Nom_user};
+    dialogConfig.data = {id: this.id, adress: this.adress};
     const dialogRef =this.dialog.open(UserDialogComponent,dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
@@ -113,8 +113,8 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "60%";
-    dialogConfig.data = {Code_user: user.Code_user, Nom_User: user.Nom_user};
-    console.log("["+user.Code_user+", "+user.Nom_user + "]");
+    dialogConfig.data = {id: user.id, adress: user.adress};
+    console.log("["+user.id+", "+user.adress + "]");
     const dialogRef =this.dialog.open(UserDtDialogComponent,dialogConfig);
 
   }
@@ -126,8 +126,8 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "60%";
-    dialogConfig.data = {Code_user: user.Code_user, Nom_user: user.Nom_user};;
-    console.log("["+user.Code_user+", "+user.Nom_user + "]");
+    dialogConfig.data = {id: user.id, adress: user.adress};;
+    console.log("["+user.id+", "+user.adress + "]");
     const dialogRef =this.dialog.open(UserDialogComponent,dialogConfig);
 
 
@@ -137,7 +137,7 @@ export class UserComponent implements OnInit,AfterViewInit  {
 
         console.log("vous avez clicker sur cancel");
       }
-      else if (result.Code_user == user.Code_user){
+      else if (result.id == user.id){
 
         this.userService.updateUser(result);
         this.paginator1();
@@ -166,7 +166,7 @@ export class UserComponent implements OnInit,AfterViewInit  {
     this.Users$ = this.userService.getAll_Users();
     this.Users$.subscribe(response => {
       artists = response ;
-      console.log("server connection ok + detail response : " + artists[0].nom_User);
+      console.log("server connection ok + detail response : " + artists[0].adress);
   }
 
 

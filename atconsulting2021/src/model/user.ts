@@ -1,4 +1,4 @@
 export interface User {
-  Code_user : number;
-  Nom_user  : string;
+  id : number;
+  adress  : string;
 }
