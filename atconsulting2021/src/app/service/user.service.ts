@@ -5,9 +5,6 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { switchMap } from 'rxjs/operators'
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +13,6 @@ export class UserService {
   userList!:User[];
   array!:User[];
   ELEMENT_DATA!:User[];
-
 
   private baseUrl = environment.host;
 
@@ -29,12 +25,6 @@ export class UserService {
     return this.http.get<User[]>(this.baseUrl+"/api/AllClient", { headers: this.headers });
 
   }
-
-
-
-
- // headers: HttpHeaders = new HttpHeaders();
-
 
   constructor(private http: HttpClient) {
     this.ELEMENT_DATA=[{id:1,adress:"user1"},
@@ -51,8 +41,6 @@ export class UserService {
     this.userList=this.ELEMENT_DATA;
    }
 
-
-   //getAllHopitals(): Observable<Hopital[]>
    getAllUsers()
    {
      //const token=sessionStorage.getItem('jhi-authenticationtoken');
@@ -60,16 +48,14 @@ export class UserService {
      console.log(token);
      this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
      console.log("salut test ...... ");
-     this.http.get<User[]>(this.baseUrl+"/api/userDtos/findAll", { headers: this.headers }).subscribe(response => {
+     this.http.get<User[]>(this.baseUrl+"/api/AllClient", { headers: this.headers }).subscribe(response => {
       // this.userList = response.map(item => new User(item));
       console.log("server connection ok + response : " + response);
   });
 
      return this.userList;
    }
-  /* getAllHopitals() {
-    return this.hopitalList;
-  }*/
+
 
 
   saveUser(user:User) {
