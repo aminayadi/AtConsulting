@@ -14,7 +14,7 @@
     <mat-icon>add</mat-icon>Create
   </button>
   <mat-form-field class="search-form-field" floatLabel="never" >
-    <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()" >
+   <!-- <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()" >-->
     <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey"  (click)="onSearchClear()">
       <mat-icon>close</mat-icon>
     </button>
@@ -23,7 +23,7 @@
 
 
 <div class="mat-elevation-z8" id="table1">
-  <table mat-table [dataSource]="dataSource"   matSort>
+  <table mat-table [dataSource]=Users$   matSort>
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Code User </th>
