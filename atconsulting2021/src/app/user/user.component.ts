@@ -9,6 +9,7 @@ import { UserService } from 'src/app/service/user.service';
 import { UserDialogComponent } from './userDialog/user-dialog.component';
 import { UserDtDialogComponent } from './userDtDialog/user-dt-dialog.component';
 import { Observable } from 'rxjs';
+import { create } from 'domain';
 
 @Component({
   selector: 'app-user',
@@ -22,12 +23,17 @@ export class UserComponent implements OnInit,AfterViewInit  {
   dataSource!: MatTableDataSource<User> ;
   userList!:User[];
 
-  displayedColumns: string[] = ['id', 'adress'];
+  displayedColumns: string[] = ['name', 'email','phone','contact','type','adress'];
 
   searchKey!: string;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!:MatPaginator;
   id!:number;
+  name!:string;
+  email!:string;
+  phone!:string;
+  contact!:string;
+  type!:string;
   adress!:string;
   vvv:any;
 
@@ -70,7 +76,7 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "60%";
-    dialogConfig.data = {id: this.id, adress: this.adress};
+    dialogConfig.data = {id: this.id, name: this.name , email:this.email , phone:this.phone , contact : this.contact , type : this.type, adress:this.adress};
     const dialogRef =this.dialog.open(UserDialogComponent,dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
@@ -113,7 +119,7 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "60%";
-    dialogConfig.data = {id: user.id, adress: user.adress};
+    dialogConfig.data = {id: this.id, name: this.name , email:this.email , phone:this.phone , contact : this.contact , type : this.type, adress:this.adress};
     console.log("["+user.id+", "+user.adress + "]");
     const dialogRef =this.dialog.open(UserDtDialogComponent,dialogConfig);
 

@@ -1,4 +1,9 @@
 export interface User {
   id : number;
-  adress  : string;
+  name: string;
+  email: string;
+  phone: string;
+  contact: string;
+  type: string;
+  adress: string;
 }
