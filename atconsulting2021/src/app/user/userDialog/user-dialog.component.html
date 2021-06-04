@@ -1,6 +1,8 @@
 
     <form fxLayout="column" fxLayoutAlign="center center" #f="ngForm" >
-    <mat-form-field>
+    <!--
+
+      <mat-form-field>
       <input
         type="number"
         matInput
@@ -12,20 +14,95 @@
         #codeHInput="ngModel">
       <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
     </mat-form-field>
-    <mat-form-field >
-      <input
-        type="text"
+
+-->
+
+    <mat-form-field>
+    <input
+        type="string"
         matInput
-        placeholder="Your nom user"
+        placeholder="company name"
         ngModel
-        name="adress"
+        name="name"
         required
-        [(ngModel)]="data.adress"
-        #nomHInput="ngModel">
-        <mat-error *ngIf="nomHInput.hasError('required')">nom must not be empty.</mat-error>
+        [(ngModel)]="data.name"
+        #codeHInput="ngModel">
+      <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
     </mat-form-field>
+
+    <mat-form-field>
+      <input
+          type="string"
+          matInput
+          placeholder="e-mail"
+          ngModel
+          name="email"
+          required
+          [(ngModel)]="data.email"
+          #codeHInput="ngModel">
+        <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <input
+            type="phone"
+            matInput
+            placeholder="phone"
+            ngModel
+            name="phone"
+            required
+            [(ngModel)]="data.phone"
+            #codeHInput="ngModel">
+          <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input
+              type="string"
+              matInput
+              placeholder="contact"
+              ngModel
+              name="contact"
+              required
+              [(ngModel)]="data.contact"
+              #codeHInput="ngModel">
+            <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field>
+            <input
+                type="string"
+                matInput
+                placeholder="Type"
+                ngModel
+                name="type"
+                required
+                [(ngModel)]="data.type"
+                #codeHInput="ngModel">
+              <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input
+                  type="string"
+                  matInput
+                  placeholder="company adress"
+                  ngModel
+                  name="adress"
+                  required
+                  [(ngModel)]="data.adress"
+                  #codeHInput="ngModel">
+                <mat-error *ngIf="codeHInput.hasError('required')">code must not be empty.</mat-error>
+              </mat-form-field>
+
+
+
     <div class="button-row">
-      <button  mat-raised-button color="primary" [disabled]="f.invalid" [mat-dialog-close]="data">Submit</button>
+      <button  mat-raised-button color="primary" [disabled]="f.invalid" [mat-dialog-close]="data" >Submit</button>
       <button  mat-raised-button color="warn" (click)="onNoClick()" >Cancel</button>
 
     </div>

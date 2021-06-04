@@ -14,7 +14,7 @@
     <mat-icon>add</mat-icon>Create
   </button>
 
-
+</div>
 
   <mat-form-field class="search-form-field" floatLabel="never" >
    <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()" >
@@ -22,11 +22,10 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-</div>
 
 
 <div class="mat-elevation-z8" id="table1">
-  <table mat-table [dataSource]=Users$   matSort>
+  <table mat-table [dataSource]=dataSource   matSort>
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Code  </th>
@@ -79,20 +78,11 @@
          </td>
     </ng-container>
 
-    <ng-container matColumnDef="loading">
-      <tr mat-footer-cell *matFooterCellDef colspan="6" class="footer">Loading data...</tr>
-    </ng-container>
-
-    <ng-container matColumnDef="noData">
-      <tr mat-footer-cell *matFooterCellDef colspan="6" class="footer">no data...</tr>
-    </ng-container>
 
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    <tr mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':dataSource!=null}" class="footer"></tr>
-    <tr mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}" class="footer"></tr>
-  </table>
+     </table>
   <mat-paginator [pageSizeOptions]="[2,4,8,12,20]" [pageSize]="4" showFirstLastButtons></mat-paginator>
 
 </div>

@@ -79,13 +79,11 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.data = {id: this.id, name: this.name , email:this.email , phone:this.phone , contact : this.contact , type : this.type, adress:this.adress};
     const dialogRef =this.dialog.open(UserDialogComponent,dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
+
       console.log('The dialog was closed');
       if (result != undefined){
-
         console.log(result);
-
-
-      //this.dataSource.data.push(result);
+      this.dataSource.data.push(result);
 
       this.userService.saveUser(result);
 
@@ -171,8 +169,9 @@ export class UserComponent implements OnInit,AfterViewInit  {
     let artists: any[] = [];
     this.Users$ = this.userService.getAll_Users();
     this.Users$.subscribe(response => {
+      this.dataSource.data = response ;
       artists = response ;
-      console.log("server connection ok + detail response : " + artists[0].adress);
+     // console.log("server connection ok + detail response : " + artists[0].adress);
   }
 
 
