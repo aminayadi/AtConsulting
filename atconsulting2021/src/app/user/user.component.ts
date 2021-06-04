@@ -85,7 +85,7 @@ export class UserComponent implements OnInit,AfterViewInit  {
         console.log(result);
       this.dataSource.data.push(result);
 
-      this.userService.saveUser(result);
+      //this.userService.saveUser(result);
 
       console.log(this.dataSource.data);
       this.paginator1();
