@@ -25,7 +25,9 @@ import { DetailComponent } from './detail/detail.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MaterialModule } from './material/material.module';
-
+import { FormsModule } from '@angular/forms';
+import { UserDtDialogComponent } from './user/userDtDialog/user-dt-dialog.component';
+import { UserDialogComponent } from './user/userDialog/user-dialog.component';
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
 export function loggerCallback(logLevel: LogLevel, message: string) {
@@ -80,7 +82,9 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     HomeComponent,
     ProfileComponent,
     DetailComponent,
-    UserComponent
+    UserComponent,
+    UserDtDialogComponent,
+    UserDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +100,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MsalModule,
     MatCardModule,
     AppRoutingModule,
+    FormsModule,
     MaterialModule
   ],
   providers: [FileService,
