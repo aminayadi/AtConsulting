@@ -10,6 +10,7 @@ import { UserDialogComponent } from './userDialog/user-dialog.component';
 import { UserDtDialogComponent } from './userDtDialog/user-dt-dialog.component';
 import { Observable } from 'rxjs';
 import { create } from 'domain';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -36,12 +37,17 @@ export class UserComponent implements OnInit,AfterViewInit  {
   type!:string;
   adress!:string;
   vvv:any;
+  public token : string;
+  public account: any;
 
-  constructor(private dialog:MatDialog,private userService :UserService ) { }
+  constructor(private dialog:MatDialog,private userService :UserService) { }
   ngAfterViewInit(): void {
     this.sort1();
     this.paginator1();
     this.getAllUsers();
+
+    
+
   }
 
   sort1(){
@@ -56,6 +62,14 @@ export class UserComponent implements OnInit,AfterViewInit  {
 
     this.getData();
 
+    this.token = history.state.token
+    this.account = history.state.account;
+
+    console.log("user.component.ts line 68 : " + this.token);
+
+
+
+    console.log("ngoninit ................... " + history.state.token);
   }
 
   getData(){
@@ -84,7 +98,8 @@ export class UserComponent implements OnInit,AfterViewInit  {
       if (result != undefined){
         console.log(result);
       this.dataSource.data.push(result);
-
+      this.userService.token = this.token ;
+      this.userService.account = this.account;
       this.userService.saveUser(result);
 
       console.log(this.dataSource.data);

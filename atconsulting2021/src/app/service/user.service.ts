@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { switchMap } from 'rxjs/operators'
+import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
+import { SilentRequest } from '@azure/msal-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,13 @@ export class UserService {
   userList!:User[];
   array!:User[];
   ELEMENT_DATA!:User[];
+  public token:string;
+  public account : any ;
+  private msalService: MsalService;
 
   private baseUrl = environment.host;
 
-  private auth_token="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMjExNDIxNH0.9zkojbRSMhfMc_5rIWy7ALVtq5f6JCchoNuJCxLhyimHq9f9U3b15TIFG1fQOR0Jv_Pu-YHcavtBF5qR3dK4Rg";
+  private auth_token="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMzc0OTIyM30.VCAXXSmFBeyIpaMz4xDQYXIErCBl5UxDxyxvz2qy6Lrzr5vKKLiefE09VFMfV6tHWmGRxcs8gX5pccP3RCp0tQ";
 
    headers!: HttpHeaders;
 
@@ -34,9 +39,9 @@ export class UserService {
    getAllUsers()
    {
      //const token=sessionStorage.getItem('jhi-authenticationtoken');
-     const token=this.auth_token;
-     console.log(token);
-     this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+     const auth_token=this.auth_token;
+     console.log(auth_token);
+     this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + auth_token);
      console.log("salut test ...... ");
      this.http.get<User[]>(this.baseUrl+"/api/AllClient", { headers: this.headers }).subscribe(response => {
       // this.userList = response.map(item => new User(item));
@@ -48,38 +53,98 @@ export class UserService {
 
 
 
-  saveUser(user:User) {
+  public async saveUser(user:User) {
 
+    const auth_token=this.auth_token;
+      try
+      {
    // this.userList.push(user);
- const token=this.auth_token;
-     console.log(token);
-    this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + token)
-                                   .set("Content-Type", "application/json");
-    const headers = { 'Authorization': 'Bearer ', token };
+ 
+ console.log("TOKEN BLOC 60 : " + this.token);
 
-    const body = JSON.stringify({
-      "client": {
-        "adress": user.adress,
-        "contact": user.contact,
-        "email": user.email,
-        "id": 0,
-        "name": user.name,
-        "phone": user.phone,
-        "type": user.type
-      },
-      "connection": {
-        "bearer_token": "EwB4A8l6BAAU6k7+XVQzkGyMv7VHB/h4cHbJYRAAAQXoJNdnp3xdvZR09okeVnRnghvSYdRpkc7ZgdBJVOgE/kChq9PiHL7IyVEZrwVGj3048iudl1MbeUu82WhZR6gzDI1VWG5t8y37mJat5gtApAdHwxub74/mBi/uCHRgFiP/gRxhHuHm8BzFjlMk4c/hbwIppSRrU00+Jo69v1jgBoyfbSyeBupdcyDZbXTqJ0620xO9gyQO/JVPgBmRQrT57atChBqZ/oi325W8qEeRdg4u45zEo/VlOZx94ylErc4K3N9IytYH5v4s/JPC1l7yW9PRTHTk8yEmfVgwpMy84vdYdWyyWQtXgiXIs49Q4xELo19IsIT7NEWekgl4cAoDZgAACCb+rqmXDgfFSAIKVJIfZYGhuVB9E5ID4/RmvcHjxsi1zYj3kG6sAgA/NrN6QPXMV1RSlqqeabCnxAhrNZ3U+9IOkFp1kPxtlCwq/aV7gboADsNTkdIwv0doUe15rk+BapsBVg4LufAD+M8i2qd3j5s4QReWgPwVDIdGKLHRlSkpZfXaBZH+LPLNGz97b4+AVqfCm9glIaD7/dw0Cf7+z1vypVvNq5sK69+okV0QGdGt5M4cNXmRBbt+FWWuZM+KxVCz4ihCIywoY6XjUjsik2GATnjsT5EdrovpNf1xoR7CB3LnP1OS1eckUQx+2VukpCOyyh3adwmh1EN8YIMSn/BWJ5ot8oFpyImOF9GxRBKzW5plM8vtB9/MLMEbksDYLZEEIk61uxSOorc/GJ9WATp381mb3ACCgxV4KwxjNNZ7fhdG/fSyw8LJplDiadxIIUBv3G9qIc5ea9k640MOIoIqUWL0U3ljI0I6Oxim6YjzhkPUwgiV55XXgRAUGQSGuYmaGGcJ/v45975aDbP/jZAmPyeHW73L5SqN0T+ZWy1S8H0Kp6J0wdFDBhrxe7Gsa25/NvjxP+QBubeVGaKCceSgiMDiXMYtCSoz+t9GNOkV709dcUyVarFwuvGdLOP9hty33PzfUDNiNdSiI5ZxiVmvRqP42wfGJuuBjPYDjZ0EtDZD9WJEkvhr7QSUKy1fsdQNf5Ss9yvq7x/Vtr/gGm5jYDSQwXS/BDv+Tce2Yx3PVA/oNDJxQ1K+TpxoXO7y5tyRL58+vIzTv7TuHYYFfB3Hl44C",
-        "idFolder": "string"
-      }
+ const loginRequest = {
+  scopes: ['https://graph.microsoft.com/.default'],
+};
+ const account = this.account;
+ const result = await this.msalService.acquireTokenSilent({
+  account,
+  scopes: loginRequest.scopes,
+});
+ if (result) {
+   //return result.forEach   .accessToken;
+    result.subscribe(res => {
+      console.log("TOKKKKKKEN : " + res.accessToken );
+
+       this.account = res.account ; 
+
+     this.token = res.accessToken ;
+
+
+
+
+
+
+
+/*
+ const refreshAccessToken = async () => {
+ 
+  
+  try {
+    const result = await this.msalService.acquireTokenSilent({
+      account,
+      scopes: loginRequest.scopes,
     });
-    this.http.post<any>('http://localhost:8082/api/ajouterClient', body, {headers: this.headers}).subscribe(data => {
+    console.log("RESULTTTTTTTTTTTTTTTTTTTTTTTTTTTT" + result);
 
-                          //this.userList=this.ELEMENT_DATA;
+    if (result) {
+      //return result.forEach   .accessToken;
+       result.subscribe(res => {
+         console.log("TOKKKKKKEN : " + res.accessToken );
+        this.token = res.accessToken ;
+        return res.accessToken;
 
-                          console.log("server connection ok + response : " + data);
 
-  })
 
+      });
+    }
+
+  } catch (error) {
+
+          
+          console.log("USER HATIMOUS " + error);
+
+
+  }
+};
+*/
+
+console.log("TOKEN BLOC 97 : " + this.token + " refresh token : " );
+this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + auth_token)
+                               .set("Content-Type", "application/json");
+const headers = { 'Authorization': 'Bearer ', auth_token };
+
+const body = JSON.stringify({
+  "client": {
+    "adress": user.adress,
+    "contact": user.contact,
+    "email": user.email,
+    "id": 0,
+    "name": user.name,
+    "phone": user.phone,
+    "type": user.type
+  },
+  "connection": {
+    "bearer_token": this.token,
+    "idFolder": "string"
+  }
+});
+this.http.post<any>('http://localhost:8082/api/ajouterClient', body, {headers: this.headers}).subscribe(data => {
+
+                      //this.userList=this.ELEMENT_DATA;
+
+                      console.log("server connection ok + response : " + data);
+
+});
 
        /*
        .post("http://localhost:8082/api/ajouterClient", JSON.stringify(user), {headers: this.headers},)
@@ -90,7 +155,14 @@ export class UserService {
 
 */
 
+return res.accessToken ;
+});
+}
 
+}
+catch(reason) {
+ console.log(reason);
+}
   }
 
   updateUser(user:User){

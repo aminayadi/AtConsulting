@@ -16,7 +16,7 @@ import { OnInit } from '@angular/core';
 import { filter, takeUntil } from 'rxjs/operators';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 
 
@@ -49,6 +49,9 @@ export class AppComponent implements OnInit {
   public authenticated: boolean;
   public user: User;
   public token: string;
+  public account:any;
+  
+
   loginDisplay = false;
   documents: any[] = [];
   setLoginDisplay() {
@@ -164,15 +167,13 @@ export class AppComponent implements OnInit {
     if (result) {
       //return result.forEach   .accessToken;
        result.subscribe(res => {
-         console.log("TOKKKKKKEN : " + res.accessToken);
+         console.log("TOKKKKKKEN : " + res.accessToken + " EXPIRED  : " + res.expiresOn.toString);
+
+          this.account = res.account ; 
+
         this.token = res.accessToken ;
 
         this. FillFolder('root','root',null);
-
-
-
-
-
 
 
           return res.accessToken ;
@@ -188,7 +189,7 @@ export class AppComponent implements OnInit {
   }
   private async FillFolder(folderName : string, folderId : string, createdID: string){
 
-    const headers = { 'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMDc3NjU3M30.fh7LSWiFXlRQGRYW3IZkf6vspM2kX5xyomAdynTslakKnSGE62kSoBlJJyW5MRZvvDDX8r48Z-5Dfi0UsmsVuw',
+    const headers = { 'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMzc0OTIyM30.VCAXXSmFBeyIpaMz4xDQYXIErCBl5UxDxyxvz2qy6Lrzr5vKKLiefE09VFMfV6tHWmGRxcs8gX5pccP3RCp0tQ',
     'Content-Type': 'application/json' };
      console.log("coucou je suis là : execute post backend ------------------")
 if (folderId == 'root')
@@ -197,10 +198,9 @@ if (folderId == 'root')
   this.URL = 'http://localhost:8082/api/atconsulting/service';
 
      return this.http.post<any>(this.URL, body, { headers }).subscribe(data => {
-    // this.dName = data;
+
     this.documents = data['value'] ;
-    // this.alertsService.addSuccess('Events from Graph', JSON.stringify(data, null, 9))
-    // console.log("-------AYA Add---taw taw-------- :"+ this.documents['value'][0].name);
+
     console.log("-------AYA Add---taw taw-------- :"+ this.documents[0].name);
     this.documents.forEach(element => {
       if (element.folder != null)
@@ -322,9 +322,10 @@ else{
 
   goToUserComponent()
   {
-    const navigationDetails: string[] = ['/user'];
-
-    this.router.navigate(navigationDetails);
+    const navigationDetails: string[] = ['/user/'];
+console.log("app.component.ts line 326 : " + this.token);
+const navigationExtras: NavigationExtras ={ state: { token: this.token, account : this.account } };
+    this.router.navigate(navigationDetails, navigationExtras);
 
 
   }
