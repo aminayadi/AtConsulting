@@ -1,11 +1,12 @@
 import { User } from '../../model/user';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { switchMap } from 'rxjs/operators'
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { SilentRequest } from '@azure/msal-browser';
+import { AccountInfo, SilentRequest } from '@azure/msal-browser';
+import {  MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class UserService {
   array!:User[];
   ELEMENT_DATA!:User[];
   public token:string;
-  public account : any ;
-  private msalService: MsalService;
+  public account : AccountInfo ;
+ 
 
   private baseUrl = environment.host;
 
@@ -31,9 +32,11 @@ export class UserService {
 
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration, 
+  private msalService: MsalService,) {
 
     this.userList=this.ELEMENT_DATA;
+    this.msalService=msalService;
    }
 
    getAllUsers()
@@ -56,32 +59,81 @@ export class UserService {
   public async saveUser(user:User) {
 
     const auth_token=this.auth_token;
-      try
-      {
+
    // this.userList.push(user);
  
  console.log("TOKEN BLOC 60 : " + this.token);
 
- const loginRequest = {
-  scopes: ['https://graph.microsoft.com/.default'],
+      try
+      {
+
+ 
+  const OAuthSettings = {
+  appId: '1ef615a5-a644-472b-a08c-cf01f7cbccf0',
+  redirectUri: 'http://localhost:4200',
+  scopes: [
+    "Files.ReadWrite", "Files.ReadWrite.All", "Sites.ReadWrite.All"
+  ]
+
 };
- const account = this.account;
- const result = await this.msalService.acquireTokenSilent({
-  account,
-  scopes: loginRequest.scopes,
-});
- if (result) {
-   //return result.forEach   .accessToken;
-    result.subscribe(res => {
-      console.log("TOKKKKKKEN : " + res.accessToken );
 
-       this.account = res.account ; 
 
-     this.token = res.accessToken ;
+const result = await this.msalService.acquireTokenSilent(OAuthSettings);
+if (result) {
+  //return result.forEach.accessToken;
+   result.subscribe(res => {
+     console.log("TOKKKKKKEN line 86 : " + res.accessToken );
+console.log("aminn----"+res.account.username);
+      this.account = res.account ; 
 
 
 
 
+
+    console.log("TOKEN BLOC 97 : " + res.accessToken  );
+    this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + auth_token)
+                                   .set("Content-Type", "application/json");
+    const headers = { 'Authorization': 'Bearer ', auth_token };
+    
+    const body = JSON.stringify({
+      "client": {
+        "adress": user.adress,
+        "contact": user.contact,
+        "email": user.email,
+        "id": 0,
+        "name": user.name,
+        "phone": user.phone,
+        "type": user.type
+      },
+      "connection": {
+        "bearer_token": res.accessToken,
+        "idFolder": "string"
+      }
+    });
+    this.http.post<any>('http://localhost:8082/api/ajouterClient', body, {headers: this.headers}).subscribe(data => {
+    
+                          this.userList=this.ELEMENT_DATA;
+    
+                          console.log("server connection ok + response : " + data);
+    
+    });
+
+
+
+
+
+
+   });
+ } 
+
+
+/*
+if (this.msalGuardConfig.authRequest){
+  this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
+    .subscribe((response: AuthenticationResult) => {
+      this.authService.instance.setActiveAccount(response.account);
+
+}
 
 
 
@@ -107,7 +159,7 @@ export class UserService {
 
       });
     }
-
+*/
   } catch (error) {
 
           
@@ -115,36 +167,8 @@ export class UserService {
 
 
   }
-};
-*/
 
-console.log("TOKEN BLOC 97 : " + this.token + " refresh token : " );
-this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + auth_token)
-                               .set("Content-Type", "application/json");
-const headers = { 'Authorization': 'Bearer ', auth_token };
 
-const body = JSON.stringify({
-  "client": {
-    "adress": user.adress,
-    "contact": user.contact,
-    "email": user.email,
-    "id": 0,
-    "name": user.name,
-    "phone": user.phone,
-    "type": user.type
-  },
-  "connection": {
-    "bearer_token": this.token,
-    "idFolder": "string"
-  }
-});
-this.http.post<any>('http://localhost:8082/api/ajouterClient', body, {headers: this.headers}).subscribe(data => {
-
-                      //this.userList=this.ELEMENT_DATA;
-
-                      console.log("server connection ok + response : " + data);
-
-});
 
        /*
        .post("http://localhost:8082/api/ajouterClient", JSON.stringify(user), {headers: this.headers},)
@@ -154,16 +178,11 @@ this.http.post<any>('http://localhost:8082/api/ajouterClient', body, {headers: t
        .catch(error => console.log('error', error));
 
 */
+       }
 
-return res.accessToken ;
-});
-}
+       
 
-}
-catch(reason) {
- console.log(reason);
-}
-  }
+  
 
   updateUser(user:User){
 

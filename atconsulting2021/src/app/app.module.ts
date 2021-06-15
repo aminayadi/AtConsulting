@@ -101,7 +101,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MatCardModule,
     AppRoutingModule,
     FormsModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [FileService,
     {

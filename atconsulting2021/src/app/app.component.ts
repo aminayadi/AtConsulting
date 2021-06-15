@@ -167,7 +167,7 @@ export class AppComponent implements OnInit {
     if (result) {
       //return result.forEach   .accessToken;
        result.subscribe(res => {
-         console.log("TOKKKKKKEN : " + res.accessToken + " EXPIRED  : " + res.expiresOn.toString);
+         console.log("TOKKKKKKEN : " + res.accessToken );
 
           this.account = res.account ; 
 
@@ -324,7 +324,7 @@ else{
   {
     const navigationDetails: string[] = ['/user/'];
 console.log("app.component.ts line 326 : " + this.token);
-const navigationExtras: NavigationExtras ={ state: { token: this.token, account : this.account } };
+const navigationExtras: NavigationExtras ={ state: { token: this.token, account : this.account}};
     this.router.navigate(navigationDetails, navigationExtras);
 
 
