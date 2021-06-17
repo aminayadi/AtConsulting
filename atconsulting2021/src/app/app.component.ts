@@ -17,6 +17,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { Inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { ImageService } from './image-upload/image.service';
 
 
 
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit {
 
   constructor(private router: Router,
     public fileService: FileService,
+    public imageService : ImageService,
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private msalService: MsalService,
     private alertsService: AlertsService,

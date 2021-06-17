@@ -28,6 +28,8 @@ import { MaterialModule } from './material/material.module';
 import { FormsModule } from '@angular/forms';
 import { UserDtDialogComponent } from './user/userDtDialog/user-dt-dialog.component';
 import { UserDialogComponent } from './user/userDialog/user-dialog.component';
+import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { ImageService } from './image-upload/image.service';
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
 export function loggerCallback(logLevel: LogLevel, message: string) {
@@ -84,7 +86,9 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     DetailComponent,
     UserComponent,
     UserDtDialogComponent,
-    UserDialogComponent
+    UserDialogComponent,
+    ImageUploadComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -104,6 +108,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MaterialModule,
   ],
   providers: [FileService,
+    ImageService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,

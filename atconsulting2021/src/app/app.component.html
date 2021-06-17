@@ -6,7 +6,7 @@
   <a mat-button [routerLink]="['user']"    (click)="goToUserComponent()">Users</a>
   <a mat-button [routerLink]="['profile']">Profile</a>
   <a mat-button [routerLink]="['lazyLoad']">Lazy-load</a>
-
+ 
   <button mat-raised-button [matMenuTriggerFor]="loginMenu" *ngIf="!loginDisplay">Login</button>
   <mat-menu #loginMenu="matMenu">
     <button mat-menu-item (click)="loginRedirect()">Login using Redirect</button>
@@ -21,13 +21,16 @@
 
 </mat-toolbar>
 <div class="container">
+  
   <!--This is to avoid reload during acquireTokenSilent() because of hidden iframe -->
   <router-outlet *ngIf="!isIframe"></router-outlet>
 </div>
 
 
+
 <div style="padding: 100px; height: 100%; box-sizing: border-box;">
   <mat-card style="height: 100%; box-sizing: border-box; padding:0">
+    <app-image-upload></app-image-upload>
     <file-explorer [fileElements]="fileElements | async" [path]="currentPath" [canNavigateUp]="canNavigateUp" (folderAdded)="addFolder($event)"
       (elementRemoved)="removeElement($event)" (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp()" (elementRenamed)="renameElement($event)"
       (elementMoved)="moveElement($event)">
