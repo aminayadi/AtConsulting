@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FileElement } from './file-explorer/model/file-element';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FileService } from './service/file.service';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { AlertsService } from './alerts.service';
@@ -18,8 +18,7 @@ import { EventMessage, EventType } from '@azure/msal-browser';
 import { Inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ImageService } from './image-upload/image.service';
-
-
+import { element } from 'protractor';
 
 
 @Component({
@@ -28,7 +27,7 @@ import { ImageService } from './image-upload/image.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public fileElements: Observable<FileElement[]>;
+  public fileElements!: Observable<FileElement[]>;
 
 
   private readonly _destroying$ = new Subject<void>();
@@ -53,15 +52,18 @@ export class AppComponent implements OnInit {
   public token: string;
   public account:any;
   
-
+  isVisible = false;
   loginDisplay = false;
   documents: any[] = [];
   setLoginDisplay() {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+    if(this.loginDisplay)
+      this.isVisible = true;
   }
 
   ngOnInit() {
     //this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+
     console.log("before set login display ");
     this.setLoginDisplay();
     console.log("after set login display ");
@@ -160,11 +162,7 @@ export class AppComponent implements OnInit {
   async getAccessToken(): Promise<string> {
     try
     {
-
-
-
       console.log("get access token ");
-
     const result = await this.msalService.acquireTokenSilent(OAuthSettings);
     if (result) {
       //return result.forEach   .accessToken;
@@ -324,11 +322,36 @@ else{
 
   goToUserComponent()
   {
+this.isVisible=false;
     const navigationDetails: string[] = ['/user/'];
 console.log("app.component.ts line 326 : " + this.token);
 const navigationExtras: NavigationExtras ={ state: { token: this.token, account : this.account}};
     this.router.navigate(navigationDetails, navigationExtras);
 
+
+  }
+
+
+  backHome()
+  {
+    this.Refresh();
+this.isVisible=true;
+    const navigationDetails: string[] = ['/'];
+console.log("app.component.ts line 326 : " + this.token);
+const navigationExtras: NavigationExtras ={ state: { token: this.token, account : this.account}};
+    this.router.navigate(navigationDetails, navigationExtras);
+
+
+  }
+
+  public Refresh()
+  {
+    
+    this.fileService = new FileService() ;
+//this.fileElements = new Observable<FileElement[]>();
+ 
+
+    this.FillFolder('root','root',null);
 
   }
 

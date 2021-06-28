@@ -1,23 +1,18 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="warn">
   <a class="title" href="/">At Consulting</a>
 
   <div class="toolbar-spacer"></div>
 
-  <a mat-button [routerLink]="['user']"    (click)="goToUserComponent()">Users</a>
-  <a mat-button [routerLink]="['profile']">Profile</a>
-  <a mat-button [routerLink]="['lazyLoad']">Lazy-load</a>
- 
-  <button mat-raised-button [matMenuTriggerFor]="loginMenu" *ngIf="!loginDisplay">Login</button>
-  <mat-menu #loginMenu="matMenu">
-    <button mat-menu-item (click)="loginRedirect()">Login using Redirect</button>
-    <button mat-menu-item (click)="loginPopup()">Login using Popup</button>
-  </mat-menu>
+  <a mat-button (click)="backHome()" *ngIf="loginDisplay">Home</a>
+  <a mat-button [routerLink]="['user']"    (click)="goToUserComponent()" *ngIf="loginDisplay">Users</a>
+  <a mat-button [routerLink]="['profile']" *ngIf="loginDisplay">Profile</a>
 
-  <button mat-raised-button [matMenuTriggerFor]="logoutMenu" *ngIf="loginDisplay">Logout</button>
-  <mat-menu #logoutMenu="matMenu">
-    <button mat-menu-item (click)="logout()">Logout using Redirect</button>
-    <button mat-menu-item (click)="logout(true)">Logout using Popup</button>
-  </mat-menu>
+ 
+  <button mat-raised-button [matMenuTriggerFor]="loginMenu" *ngIf="!loginDisplay" (click)="loginPopup()">Login</button>
+
+
+  <button mat-raised-button [matMenuTriggerFor]="logoutMenu" *ngIf="loginDisplay" (click)="logout(true)">Logout</button>
+
 
 </mat-toolbar>
 <div class="container">
@@ -28,12 +23,15 @@
 
 
 
-<div style="padding: 100px; height: 100%; box-sizing: border-box;">
+<div style="padding: 100px; height: 90%; box-sizing: border-box; margin-bottom: 0;" *ngIf="isVisible" >
   <mat-card style="height: 100%; box-sizing: border-box; padding:0">
-    <app-image-upload></app-image-upload>
+    
     <file-explorer [fileElements]="fileElements | async" [path]="currentPath" [canNavigateUp]="canNavigateUp" (folderAdded)="addFolder($event)"
       (elementRemoved)="removeElement($event)" (navigatedDown)="navigateToFolder($event)" (navigatedUp)="navigateUp()" (elementRenamed)="renameElement($event)"
       (elementMoved)="moveElement($event)">
     </file-explorer>
   </mat-card>
+  <div class="container" align="center"  ><app-image-upload></app-image-upload></div>
 </div>
+
+

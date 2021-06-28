@@ -1,9 +1,10 @@
 <label class="image-upload-container btn btn-bwm">
-    <span>Select Image</span>
+    
     <input #imageInput
            type="file"
            accept="image/*"
-           (change)="processFile(imageInput)">
+           (change)="processFile(imageInput)"
+           style="font-size: 20px;">
   </label>
   
   
@@ -17,6 +18,6 @@
       <div class="img-spinning-circle"></div>
     </div>
   
-    <div *ngIf="selectedFile.status === 'ok'" class="alert alert-success"> Image Uploaded Succesfuly!</div>
-    <div *ngIf="selectedFile.status === 'fail'" class="alert alert-danger"> Image Upload Failed!</div>
+    <div *ngIf="selectedFile.status === 'ok'" class="alert alert-success" style="font-size: 20px; color: aliceblue;"> Image Uploaded Succesfuly!</div>
+    <div *ngIf="selectedFile.status === 'fail'" class="alert alert-danger" style="font-size: 20px; color: aliceblue;"> Image Upload Failed!</div>
   </div>
