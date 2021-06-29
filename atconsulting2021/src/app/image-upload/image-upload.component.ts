@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ImageService } from './image.service';
+import { FileElement } from '../file-explorer/model/file-element';
 import Swal from 'sweetalert2';
 import {Router} from '@angular/router';
 class ImageSnippet {
@@ -16,6 +17,7 @@ class ImageSnippet {
 })
 export class ImageUploadComponent {
   @Input() token: string;
+  @Input() currentPath: String;
   selectedFile: ImageSnippet;
 
   private baseUrl = environment.host;
@@ -34,17 +36,21 @@ export class ImageUploadComponent {
 console.log("Binary Image 64 : " + this.selectedFile.src.toString() );
 console.log("fileName  : " + this.selectedFile.file.name);
 console.log("TOKEN BLOC  : " + this.token);
-
+console.log("this.currentPath  : " + this.currentPath);
 
 this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.auth_token)
 .set("Content-Type", "application/json");
-
- 
+/*
+if (this.currentPath ==null)
+      this.currentPath = "root";
+else 
+      this.currentPath = "root/"+this.currentPath
+*/
  const body = JSON.stringify({
 
   "connection": {
     "bearer_token": this.token,
-    "idFolder": "root"
+    "idFolder": this.currentPath
   },
   "pName": this.selectedFile.file.name,
   "photo": this.selectedFile.src.substring(this.selectedFile.src.lastIndexOf(",") + 1)
