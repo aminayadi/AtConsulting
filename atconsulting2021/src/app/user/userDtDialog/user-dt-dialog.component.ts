@@ -2,6 +2,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { User } from 'src/model/user';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-dt-dialog',
@@ -19,6 +20,7 @@ export class UserDtDialogComponent implements OnInit {
   onNoClick(){
 
     this.dialogRef.close();
+    
     console.log("cancel");
 
   }

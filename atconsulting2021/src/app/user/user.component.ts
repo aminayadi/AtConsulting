@@ -9,6 +9,7 @@ import { UserService } from 'src/app/service/user.service';
 import { UserDialogComponent } from './userDialog/user-dialog.component';
 import { UserDtDialogComponent } from './userDtDialog/user-dt-dialog.component';
 import { Observable } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 
@@ -96,7 +97,10 @@ export class UserComponent implements OnInit,AfterViewInit  {
     dialogConfig.data = {id: this.id, name: this.name , email:this.email , phone:this.phone , contact : this.contact , type : this.type, adress:this.adress};
     const dialogRef =this.dialog.open(UserDialogComponent,dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
-
+Swal.fire(
+      'success!',
+      'Votre client a été ajouté avec succès .',
+      'success')
       console.log('The dialog was closed');
       if (result != undefined){
         console.log(result);

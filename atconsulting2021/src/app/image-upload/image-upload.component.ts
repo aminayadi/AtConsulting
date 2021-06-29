@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ImageService } from './image.service';
+import Swal from 'sweetalert2';
+import {Router} from '@angular/router';
 class ImageSnippet {
   pending: boolean = false;
   status: string = 'init';
@@ -19,7 +21,7 @@ export class ImageUploadComponent {
   private baseUrl = environment.host;
   private auth_token="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyMzc0OTIyM30.VCAXXSmFBeyIpaMz4xDQYXIErCBl5UxDxyxvz2qy6Lrzr5vKKLiefE09VFMfV6tHWmGRxcs8gX5pccP3RCp0tQ";
    headers!: HttpHeaders;
-  constructor(private http: HttpClient, private imageService: ImageService){}
+  constructor(private _router:Router,private http: HttpClient, private imageService: ImageService){}
 
 
   processFile(imageInput: any) {
@@ -50,7 +52,7 @@ this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.auth_toke
  this.http.put<any>('http://localhost:8082/api/ajouterPhoto', body, {headers: this.headers}).subscribe(data => {
  
                        
- 
+  
                        console.log("server connection ok + response : " + data);
                       
  });
@@ -60,6 +62,24 @@ this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.auth_toke
     });
 
     reader.readAsDataURL(file);
+    Swal.fire({
+      title: 'succès?',
+      text: 'Votre facture a été ajouté avec succès !',
+      icon: 'success',
+      confirmButtonText: 'Go To Home!',
+     
+    }).then((result) => {
+      if (result.isConfirmed) {
+        /*Swal.fire(
+          'Deleted!',
+          'Your imaginary file has been deleted.',
+          'success'
+          this._router.navigate([/home])
+        )
+      */
+        this._router.navigate(["/home"])
+      } 
+    })
   }
 }
 

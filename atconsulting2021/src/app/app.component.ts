@@ -19,7 +19,7 @@ import { Inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ImageService } from './image-upload/image.service';
 import { element } from 'protractor';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -209,14 +209,16 @@ if (folderId == 'root')
        const folder  = this.fileService.add({ name: element.name, isFolder: true, parent:"root", id: element.id });
        this.FillFolder(this.token, element.id, folder.id);
        this.updateFileElementQuery();
+       
       }
      else
      {
       console.log("Root : Adding file :"+ element.name);
        this.fileService.add({ name: element.name, isFolder: false, parent:"root", id: element.id});
        this.updateFileElementQuery();
+       
      }
-
+     
    });
    /*
        const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
