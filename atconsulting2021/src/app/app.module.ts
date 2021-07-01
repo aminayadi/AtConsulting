@@ -73,7 +73,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      scopes: ['user.read', 'Files.Read.All','Files.ReadWrite', 'Files.ReadWrite.All']
+      scopes: ['user.read', 'Files.Read.All','Files.ReadWrite', 'Files.ReadWrite.All', "Sites.ReadWrite.All","User.Invite.All"]
     },
     loginFailedRoute: '/login-failed'
   };
